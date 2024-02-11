@@ -9,35 +9,24 @@ import random
 import time
 from csv import reader
 from datetime import datetime
-
-from kafka import KafkaProducer
-
-from config.kafka import get_configs
 from models.product import Product
 from models.purchase import Purchase
 from models.inventory import Inventory
 
 config = configparser.ConfigParser()
-config.read("configuration/configuration.ini")
+config.read("sales_generator/configuration.ini")
 
 # *** CONFIGURATION ***
-topic_products = config["KAFKA"]["topic_products"]
-topic_purchases = config["KAFKA"]["topic_purchases"]
-topic_inventories = config["KAFKA"]["topic_inventories"]
-
 min_sale_freq = int(config["SALES"]["min_sale_freq"])
 max_sale_freq = int(config["SALES"]["max_sale_freq"])
 number_of_sales = int(config["SALES"]["number_of_sales"])
-transaction_quantity_one_item_freq = int(
-    config["SALES"]["transaction_quantity_one_item_freq"]
-)
+transaction_quantity_one_item_freq = int(config["SALES"]["transaction_quantity_one_item_freq"])
 item_quantity_one_freq = int(config["SALES"]["item_quantity_one_freq"])
 member_freq = int(config["SALES"]["member_freq"])
 club_member_discount = float(config["SALES"]["club_member_discount"])
 add_supp_freq_group1 = int(config["SALES"]["add_supp_freq_group1"])
 add_supp_freq_group2 = int(config["SALES"]["add_supp_freq_group2"])
 supplements_cost = float(config["SALES"]["supplements_cost"])
-
 min_inventory = int(config["INVENTORY"]["min_inventory"])
 restock_amount = int(config["INVENTORY"]["restock_amount"])
 
@@ -53,7 +42,7 @@ def main():
 
 # create products and propensity_to_buy lists from CSV data file
 def create_product_list():
-    with open("data/products.csv", "r") as csv_file:
+    with open("sales_generator/models/products.csv", "r") as csv_file:
         next(csv_file)  # skip header row
         csv_reader = reader(csv_file)
         csv_products = list(csv_reader)
@@ -75,9 +64,10 @@ def create_product_list():
             p[14],
         )
         products.append(new_product)
-        publish_to_kafka(topic_products, new_product)
+        #publish_to_kafka(topic_products, new_product)
         propensity_to_buy_range.append(int(p[14]))
     propensity_to_buy_range.sort()
+    print(propensity_to_buy_range)
 
 
 # generate synthetic sale transactions
@@ -118,7 +108,10 @@ def generate_sales():
                         add_supplement,
                         supplement_price,
                     )
-                    publish_to_kafka(topic_purchases, new_purchase)
+                    #publish_to_kafka(topic_purchases, new_purchase)
+
+                    print(new_purchase)
+
                     p.inventory_level = p.inventory_level - quantity
                     if p.inventory_level <= min_inventory:
                         restock_item(p.product_id)
@@ -139,20 +132,10 @@ def restock_item(product_id):
                 new_level,
             )
             p.inventory_level = new_level  # update existing product item
-            publish_to_kafka(topic_inventories, new_inventory)
+            
+            print(new_inventory)
+            #publish_to_kafka(topic_inventories, new_inventory)
             break
-
-
-# serialize object to json and publish message to kafka topic
-def publish_to_kafka(topic, message):
-    configs = get_configs()
-
-    producer = KafkaProducer(
-        value_serializer=lambda v: json.dumps(vars(v)).encode("utf-8"),
-        **configs,
-    )
-    producer.send(topic, value=message)
-    print("Topic: {0}, Value: {1}".format(topic, message))
 
 
 # convert uppercase boolean values from CSV file to Python

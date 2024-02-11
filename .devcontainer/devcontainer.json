@@ -2,7 +2,7 @@
 	"name": "PySpark local cluster",
 	"dockerComposeFile": ["./docker-compose.yaml"],
     "service": "spark",
-    "workspaceFolder": "/home/jovyan/code",
+    "workspaceFolder": "/home/peter",
 
     "customizations": {
         "vscode" : {
