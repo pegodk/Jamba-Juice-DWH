@@ -35,10 +35,6 @@ products = []
 propensity_to_buy_range = []
 
 
-def main():
-    create_product_list()
-    generate_sales()
-
 
 # create products and propensity_to_buy lists from CSV data file
 def create_product_list():
@@ -64,10 +60,11 @@ def create_product_list():
             p[14],
         )
         products.append(new_product)
+
+        print(new_product)
         #publish_to_kafka(topic_products, new_product)
         propensity_to_buy_range.append(int(p[14]))
     propensity_to_buy_range.sort()
-    print(propensity_to_buy_range)
 
 
 # generate synthetic sale transactions
@@ -192,4 +189,7 @@ def random_add_supplements(product_id):
 
 
 if __name__ == "__main__":
-    main()
+    create_product_list()
+    generate_sales()
+
+
