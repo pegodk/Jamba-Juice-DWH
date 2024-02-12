@@ -132,6 +132,7 @@ def restock_item(product_id):
             p.inventory_level = new_level  # update existing product item
             
             print(new_inventory)
+            new_inventory.write_to_json()
             break
 
 
