@@ -32,15 +32,15 @@ class Inventory:
     def write_to_json(self):
 
         # Serializing json
-        json_object = json.dumps({
+        json_object = json.dumps([{
             "event_time": self.event_time,
             "product_id": self.product_id,
             "existing_level": self.existing_level,
             "stock_quantity": self.stock_quantity,
             "new_level": self.new_level
-        })
+        }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "Inventory", f"{self.event_time}.json")
+        file_path = os.path.join("data", "Inventory", f"{self.product_id}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)

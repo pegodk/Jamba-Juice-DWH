@@ -55,7 +55,7 @@ class Product:
     def write_to_json(self):
 
         # Serializing json
-        json_object = json.dumps({
+        json_object = json.dumps([{
             "event_time": self.event_time,
             "product_id": self.product_id,
             "category": self.category,
@@ -67,9 +67,9 @@ class Product:
             "contains_veggies": self.contains_veggies,
             "contains_nuts": self.contains_nuts,
             "contains_caffeine": self.contains_caffeine
-        })
+        }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "Product", f"{self.event_time}.json")
+        file_path = os.path.join("data", "Product", f"{self.product_id}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)

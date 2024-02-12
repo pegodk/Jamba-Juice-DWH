@@ -48,7 +48,7 @@ class Purchase:
     def write_to_json(self):
 
         # Serializing json
-        json_object = json.dumps({
+        json_object = json.dumps([{
             "transaction_time": self.transaction_time,
             "transaction_id": self.transaction_id,
             "product_id": self.product_id,
@@ -59,9 +59,9 @@ class Purchase:
             "is_member": self.is_member,
             "member_discount": self.member_discount,
             "total_purchase": self.total_purchase
-        })
+        }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "Purchase", f"{self.transaction_time}.json")
+        file_path = os.path.join("data", "Purchase", f"{self.transaction_id}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)
