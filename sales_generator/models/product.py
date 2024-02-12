@@ -1,3 +1,6 @@
+import os
+import json
+
 class Product:
     def __init__(
         self,
@@ -48,3 +51,25 @@ class Product:
                 self.contains_caffeine,
             )
         )
+
+    def write_to_json(self):
+
+        # Serializing json
+        json_object = json.dumps({
+            "event_time": self.event_time,
+            "product_id": self.product_id,
+            "category": self.category,
+            "item": self.item,
+            "size": self.size,
+            "cogs": self.cogs,
+            "price": self.price,
+            "contains_fruit": self.contains_fruit,
+            "contains_veggies": self.contains_veggies,
+            "contains_nuts": self.contains_nuts,
+            "contains_caffeine": self.contains_caffeine
+        })
+        
+        # Writing to sample.json
+        file_path = os.path.join("sales_generator", "data", "Product", f"{self.event_time}.json")
+        with open(file_path, "w") as outfile:
+            outfile.write(json_object)

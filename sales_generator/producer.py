@@ -3,6 +3,7 @@
 # Date: 2022-08-29
 # Instructions: Modify the configuration.ini file to meet your requirements.
 
+import os
 import configparser
 import json
 import random
@@ -34,8 +35,6 @@ restock_amount = int(config["INVENTORY"]["restock_amount"])
 products = []
 propensity_to_buy_range = []
 
-
-
 # create products and propensity_to_buy lists from CSV data file
 def create_product_list():
     with open("sales_generator/models/products.csv", "r") as csv_file:
@@ -61,8 +60,9 @@ def create_product_list():
         )
         products.append(new_product)
 
+        new_product.write_to_json()
         print(new_product)
-        #publish_to_kafka(topic_products, new_product)
+
         propensity_to_buy_range.append(int(p[14]))
     propensity_to_buy_range.sort()
 
@@ -108,6 +108,7 @@ def generate_sales():
                     #publish_to_kafka(topic_purchases, new_purchase)
 
                     print(new_purchase)
+                    new_purchase.write_to_json()
 
                     p.inventory_level = p.inventory_level - quantity
                     if p.inventory_level <= min_inventory:
@@ -131,7 +132,6 @@ def restock_item(product_id):
             p.inventory_level = new_level  # update existing product item
             
             print(new_inventory)
-            #publish_to_kafka(topic_inventories, new_inventory)
             break
 
 
@@ -189,6 +189,11 @@ def random_add_supplements(product_id):
 
 
 if __name__ == "__main__":
+
+    os.makedirs("data/Product", exist_ok=True)
+    os.makedirs("data/Sales", exist_ok=True)
+    os.makedirs("data/Inventory", exist_ok=True)
+
     create_product_list()
     generate_sales()
 
