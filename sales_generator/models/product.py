@@ -70,6 +70,6 @@ class Product:
         })
         
         # Writing to sample.json
-        file_path = os.path.join("sales_generator", "data", "Product", f"{self.event_time}.json")
+        file_path = os.path.join("data", "Product", f"{self.event_time}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)

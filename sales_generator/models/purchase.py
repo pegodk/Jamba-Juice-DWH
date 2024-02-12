@@ -62,6 +62,6 @@ class Purchase:
         })
         
         # Writing to sample.json
-        file_path = os.path.join("data", "Product", f"{self.transaction_time}.json")
+        file_path = os.path.join("data", "Purchase", f"{self.transaction_time}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)
