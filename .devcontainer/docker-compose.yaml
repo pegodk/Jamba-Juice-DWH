@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      # - ..:/home/peter
-      - ./:/mounted-data
+      - ..:/home/peter
+      # - ./:/mounted-data
     ports:
       - "8888:8888"
     command: start.sh jupyter notebook --NotebookApp.token='' --NotebookApp.disable_check_xsrf=true --NotebookApp.allow_origin='*' --NotebookApp.ip='0.0.0.0'
