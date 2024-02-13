@@ -6,7 +6,6 @@ if __name__ == "__main__":
     fake = Faker()
     # fake.seed_instance(1337)
 
-
     print(fake.name())
     print(fake.address())
     print(fake.phone_number())

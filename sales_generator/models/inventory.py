@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 
 class Inventory:
     def __init__(
@@ -41,6 +42,6 @@ class Inventory:
         }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "Inventory", f"{self.product_id}.json")
+        file_path = os.path.join("data", "Inventory", f"{int(datetime.now().timestamp() * 1e6)}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)
