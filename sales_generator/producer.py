@@ -191,9 +191,9 @@ def random_add_supplements(product_id):
 
 if __name__ == "__main__":
 
-    os.makedirs("data/Product", exist_ok=True)
-    os.makedirs("data/Purchase", exist_ok=True)
-    os.makedirs("data/Inventory", exist_ok=True)
+    os.makedirs("data/landing/Product", exist_ok=True)
+    os.makedirs("data/landing/Purchase", exist_ok=True)
+    os.makedirs("data/landing/Inventory", exist_ok=True)
 
     create_product_list()
     generate_sales()
