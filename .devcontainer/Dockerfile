@@ -25,7 +25,7 @@ RUN "${CONDA_DIR}/envs/${conda_env}/bin/python" -m ipykernel install --user --na
 
 # any additional pip installs can be added by uncommenting the following line
 #RUN "${CONDA_DIR}/envs/${conda_env}/bin/pip" install pyspark pandas delta-spark --no-cache-dir
-RUN "${CONDA_DIR}/envs/${conda_env}/bin/pip" install delta-spark pandas --no-cache-dir
+RUN "${CONDA_DIR}/envs/${conda_env}/bin/pip" install delta-spark==3.1.0 --no-cache-dir
 
 # if you want this environment to be the default one, uncomment the following line:
 RUN echo "conda activate ${conda_env}" >> "${HOME}/.bashrc"
