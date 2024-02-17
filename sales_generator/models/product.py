@@ -71,6 +71,6 @@ class Product:
         }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "landing", "Product", f"{int(datetime.now().timestamp() * 1e6)}.json")
+        file_path = os.path.join("data", "product", f"{int(datetime.now().timestamp() * 1e6)}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)
