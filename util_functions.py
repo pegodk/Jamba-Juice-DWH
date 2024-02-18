@@ -1,6 +1,6 @@
 
 
-def get_cols_to_front(df, columns_to_front, columns_to_delete):
+def reorder_columns_in_dataframe(df, columns_to_front, columns_to_delete):
     
     # Get original order of columns
     original = df.columns
