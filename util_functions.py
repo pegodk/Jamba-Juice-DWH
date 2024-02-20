@@ -1,19 +1,20 @@
 
 
-def reorder_columns_in_dataframe(df, columns_to_front, columns_to_delete):
+def reorder_columns_in_dataframe(df, columns_to_front, columns_to_back=[], columns_to_delete=[]):
     
     # Get original order of columns
     original = df.columns
     
     # Filter to present columns
     columns_to_front = [c for c in columns_to_front if c in original]
+    columns_to_back = [c for c in columns_to_back if c in original and c not in columns_to_delete]
     
     # Keep the rest of the columns and sort it for consistency
-    columns_other = list(set(original) - set(columns_to_front) - set(columns_to_delete))
+    columns_other = list(set(original) - set(columns_to_front)- set(columns_to_back) - set(columns_to_delete))
     columns_other.sort()
     
     # Apply the order
-    df = df.select(*columns_to_front, *columns_other)
+    df = df.select(*columns_to_front, *columns_other, *columns_to_back)
     return df
 
 
