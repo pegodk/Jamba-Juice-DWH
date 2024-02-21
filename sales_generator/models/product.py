@@ -35,21 +35,12 @@ class Product:
 
     def __str__(self):
         return (
-            "Product: event_time: {0}, Product: product_id: {1}, category: {2}, item: {3}, size: {4}, "
-            "cogs: ${5:.2f}, price: ${6:.2f}, inventory_level: {7:.0f}, contains_fruit: {8}, contains_veggies: {9}, "
-            "contains_nuts: {10}, contains_caffeine: {10}".format(
-                self.event_time,
+            "\nNew product created: \tproduct_id: {0}, category: {1}, item: {2}, size: {3}, price: ${4:.2f}".format(
                 self.product_id,
                 self.category,
                 self.item,
                 self.size,
-                self.cogs,
-                self.price,
-                self.inventory_level,
-                self.contains_fruit,
-                self.contains_veggies,
-                self.contains_nuts,
-                self.contains_caffeine,
+                self.price
             )
         )
 
