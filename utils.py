@@ -19,7 +19,7 @@ def reorder_columns_in_dataframe(df, columns_to_front, columns_to_back=[], colum
 
 
 
-def generate_dim_table_references(source, timestamp_key, dim_table_refs, print_output=True):
+def generate_dim_table_references(source, target, timestamp_key, dim_table_refs, delta_load_column, print_output=True):
     
     query_first = "SELECT src.*"
     query_last = f"\nFROM {source} src"
@@ -33,6 +33,10 @@ def generate_dim_table_references(source, timestamp_key, dim_table_refs, print_o
         query_last += f"""\nLEFT JOIN {ref["table_name"]} ON {ref["table_name"]}.{ref["merge_key"]} = src.{ref["merge_key"]}
         AND src.{timestamp_key} BETWEEN {ref["table_name"]}.meta_valid_from AND {ref["table_name"]}.meta_valid_to"""
 
+    # Add delta load logic if the target table already exists
+    if delta_load_column:
+        query_last += f"\n WHERE src.{delta_load_column} > (SELECT MAX({delta_load_column}) FROM {target})"
+    
     # Print output
     if print_output:
         print(query_first + query_last)
