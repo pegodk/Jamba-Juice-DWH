@@ -10,6 +10,7 @@ __pycache__/
 .Python
 build/
 data/
+metastore_db/
 spark-warehouse/
 develop-eggs/
 dist/
