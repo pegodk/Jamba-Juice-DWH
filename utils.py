@@ -19,7 +19,7 @@ def reorder_columns_in_dataframe(df, columns_to_front, columns_to_back=[], colum
 
 
 
-def generate_dim_table_references(source, target, timestamp_key, dim_table_refs, delta_load_column, print_output=True):
+def generate_dim_table_references(source, target, timestamp_key, dim_table_refs, delta_load_column, print_output=False):
     
     query_first = "SELECT src.*"
     query_last = f"\nFROM {source} src"
