@@ -19,7 +19,7 @@ class Inventory:
 
     def __str__(self):
         return (
-            "\nRestocking inventory: \tproduct_id: {1}, existing_level: {2:.0f}, stock_quantity: {3:.0f}, new_level: {4:.0f}".format(
+            "\nRestocking inventory: \tproduct_id: {0}, existing_level: {1:.0f}, stock_quantity: {2:.0f}, new_level: {3:.0f}".format(
                 self.product_id,
                 self.existing_level,
                 self.stock_quantity,

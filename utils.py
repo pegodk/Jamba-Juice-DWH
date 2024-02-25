@@ -35,7 +35,7 @@ def generate_dim_table_references(source, target, timestamp_key, dim_table_refs,
 
     # Add delta load logic if the target table already exists
     if delta_load_column:
-        query_last += f"\n WHERE src.{delta_load_column} > (SELECT MAX({delta_load_column}) FROM {target})"
+        query_last += f"\n WHERE src.{delta_load_column} > (SELECT COALESCE(MAX({delta_load_column}), '1970-01-01') FROM {target})"
     
     # Print output
     if print_output:
