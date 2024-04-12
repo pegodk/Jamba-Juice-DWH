@@ -4,11 +4,11 @@
 
 This project is therefore about building a **Streaming Data Warehouse** based on [Spark](https://github.com/apache/spark) and [Delta](https://github.com/delta-io/delta).
 
-# Inspiration for this project
+## Inspiration for this project
 
 *Disclaimer:* This project has taken inspiration (and code) from the [streaming-sales-generator](https://github.com/garystafford/streaming-sales-generator) project.
 
-# Local PySpark dev environment
+## Local PySpark dev environment
 
 This repo provides everything needed for a self-contained, local PySpark single node cluster, including a Jupyter notebook environment.
 
