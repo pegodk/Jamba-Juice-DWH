@@ -1,5 +1,3 @@
-
-
 def reorder_columns_in_dataframe(df, columns_to_front, columns_to_back=[], columns_to_delete=[]):
     
     # Get original order of columns
@@ -16,7 +14,6 @@ def reorder_columns_in_dataframe(df, columns_to_front, columns_to_back=[], colum
     # Apply the order
     df = df.select(*columns_to_front, *columns_other, *columns_to_back)
     return df
-
 
 
 def generate_dim_table_references(source, target, timestamp_key, dim_table_refs, delta_load_column, print_output=False):

@@ -1,8 +1,10 @@
-# Welcome to the Jamba Juice® smoothie shop!
+# Welcome to the Jamba Juice Bar®
 
 **Motivation:** You run a smoothie shop, but really want to keep track of your sales - in real-time!
 
 This project is therefore about building a **Streaming Data Warehouse** based on [Spark](https://github.com/apache/spark) and [Delta](https://github.com/delta-io/delta).
+
+![alt text](images/juice_bar.png "Jamba Juice Bar")
 
 ## Inspiration for this project
 
