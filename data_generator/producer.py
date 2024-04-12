@@ -15,7 +15,7 @@ from models.purchase import Purchase
 from models.inventory import Inventory
 
 config = configparser.ConfigParser()
-config.read("sales_generator/configuration.ini")
+config.read("data_generator/configuration.ini")
 
 # *** CONFIGURATION ***
 min_sale_freq = int(config["SALES"]["min_sale_freq"])
@@ -37,7 +37,7 @@ propensity_to_buy_range = []
 
 # create products and propensity_to_buy lists from CSV data file
 def create_product_list():
-    with open("sales_generator/models/products.csv", "r") as csv_file:
+    with open("data_generator/models/products.csv", "r") as csv_file:
         next(csv_file)  # skip header row
         csv_reader = reader(csv_file)
         csv_products = list(csv_reader)
