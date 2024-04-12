@@ -11,7 +11,7 @@ import time
 from csv import reader
 from datetime import datetime
 from models.product import Product
-from models.purchase import Purchase
+from models.sale import Sale
 from models.inventory import Inventory
 from models.customer import pick_customer
 
@@ -116,7 +116,7 @@ def generate_sales():
                         print(p)
 
                     # generate new sale
-                    new_purchase = Purchase(
+                    new_sale = Sale(
                         customer_id=customer.customer_id,
                         product_id=p.product_id,
                         price=p.price,
@@ -125,10 +125,10 @@ def generate_sales():
                         add_supplements=random_add_supplements(p.product_id),
                     )
 
-                    print(new_purchase)
-                    new_purchase.write_to_json()
+                    print(new_sale)
+                    new_sale.write_to_json()
 
-                    p.inventory_level = p.inventory_level - new_purchase.quantity
+                    p.inventory_level = p.inventory_level - new_sale.quantity
                     if p.inventory_level <= min_inventory:
                         restock_item(p.product_id)
                     break
@@ -213,7 +213,7 @@ if __name__ == "__main__":
 
     os.makedirs("data/customer", exist_ok=True)
     os.makedirs("data/product", exist_ok=True)
-    os.makedirs("data/purchase", exist_ok=True)
+    os.makedirs("data/sales", exist_ok=True)
     os.makedirs("data/inventory", exist_ok=True)
 
     create_product_list()

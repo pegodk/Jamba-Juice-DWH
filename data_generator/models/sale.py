@@ -8,7 +8,7 @@ config.read("data_generator/configuration.ini")
 club_member_discount = float(config["SALES"]["club_member_discount"])
 supplements_cost = float(config["SALES"]["supplements_cost"])
 
-class Purchase:
+class Sale:
     def __init__(
         self,
         customer_id: int,
@@ -30,7 +30,7 @@ class Purchase:
 
     def __str__(self):
         return (
-            "\nPurchase: \t\tproduct_id: {0}, quantity: {1:.0f}, supplement_price: ${2:.2f}, member_discount: {3:.0%}, total: ${4:.2f}".format(
+            "\nSale: \t\t\tproduct_id: {0}, quantity: {1:.0f}, supplement_price: ${2:.2f}, member_discount: {3:.0%}, total: ${4:.2f}".format(
                 self.product_id,
                 self.quantity,
                 self.supplement_price,
@@ -55,6 +55,6 @@ class Purchase:
         }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "purchase", f"{int(datetime.now().timestamp() * 1e6)}.json")
+        file_path = os.path.join("data", "sales", f"{int(datetime.now().timestamp() * 1e6)}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)
