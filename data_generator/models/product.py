@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime, UTC
+from datetime import datetime
 
 class Product:
     def __init__(
@@ -35,7 +35,7 @@ class Product:
 
     def __str__(self):
         return (
-            "\nNew product created: \tproduct_id: {0}, category: {1}, item: {2}, size: {3}, price: ${4:.2f}".format(
+            "\nProduct created: \tproduct_id: {0}, category: {1}, item: {2}, size: {3}, price: ${4:.2f}".format(
                 self.product_id,
                 self.category,
                 self.item,
@@ -62,6 +62,6 @@ class Product:
         }])
         
         # Writing to sample.json
-        file_path = os.path.join("data", "product", f"{int(datetime.now(UTC).timestamp() * 1e6)}.json")
+        file_path = os.path.join("data", "product", f"{int(datetime.now().timestamp() * 1e6)}.json")
         with open(file_path, "w") as outfile:
             outfile.write(json_object)

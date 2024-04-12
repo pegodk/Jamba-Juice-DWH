@@ -13,8 +13,9 @@ from datetime import datetime
 from models.product import Product
 from models.purchase import Purchase
 from models.inventory import Inventory
+from models.customer import pick_customer
 
-config = configparser.ConfigParser()
+config = configparser.ConfigParser(inline_comment_prefixes=('#'))
 config.read("data_generator/configuration.ini")
 
 # *** CONFIGURATION ***
@@ -32,6 +33,7 @@ min_inventory = int(config["INVENTORY"]["min_inventory"])
 restock_amount = int(config["INVENTORY"]["restock_amount"])
 
 # *** VARIABLES ***
+customers = []
 products = []
 propensity_to_buy_range = []
 
@@ -44,7 +46,7 @@ def create_product_list():
 
     for p in csv_products:
         new_product = Product(
-            str(datetime.utcnow()),
+            str(datetime.now()),
             p[0],
             p[1],
             p[2],
@@ -69,51 +71,60 @@ def create_product_list():
 
 # generate synthetic sale transactions
 def generate_sales():
+    
     # common to all transactions
     range_min = propensity_to_buy_range[0]
     range_max = propensity_to_buy_range[-1]
-    for x in range(0, number_of_sales):
-        # common for each transaction's line items
-        transaction_time = str(datetime.utcnow())
-        is_member = random_club_member()
-        member_discount = club_member_discount if is_member else 0.00
+
+    # generate a number of sales
+    for _ in range(0, number_of_sales):
+        
+        # choose existing customer or generate new
+        customer = pick_customer(customers)
+        customer.write_to_json()
+        print(customer)
+
+        # append customer to list of customers or overwrite previous info if neccessary
+        if customer.customer_id > len(customers):
+            customers.append(customer)
+        else:
+            customers[customer.customer_id - 1] = customer
 
         # reset values
         rnd_propensity_to_buy = -1
         previous_rnd_propensity_to_buy = -1
 
-        for y in range(0, random_transaction_item_quantity()):
-            # reduces but not eliminates risk of duplicate products in same transaction - TODO: improve this method
+        # generate a number of transactions per sale
+        for _ in range(0, random_transaction_item_quantity()):
+            
+            # reduces but not eliminates risk of duplicate products in same transaction
             if rnd_propensity_to_buy == previous_rnd_propensity_to_buy:
                 rnd_propensity_to_buy = closest_product_match(
                     propensity_to_buy_range, random.randint(range_min, range_max)
                 )
             previous_rnd_propensity_to_buy = rnd_propensity_to_buy
-            quantity = random_quantity()
+            
             for p in products:
                 if p.propensity_to_buy == rnd_propensity_to_buy:
-                    add_supplement = random_add_supplements(p.product_id)
-                    supplement_price = supplements_cost if add_supplement else 0.00
+
                     new_purchase = Purchase(
-                        transaction_time,
-                        str(abs(hash(transaction_time))),
-                        p.product_id,
-                        p.price,
-                        random_quantity(),
-                        is_member,
-                        member_discount,
-                        add_supplement,
-                        supplement_price,
+                        customer_id=customer.customer_id,
+                        product_id=p.product_id,
+                        price=p.price,
+                        quantity=random_quantity(),
+                        is_member=random_club_member(),
+                        add_supplements=random_add_supplements(p.product_id),
                     )
-                    #publish_to_kafka(topic_purchases, new_purchase)
 
                     print(new_purchase)
                     new_purchase.write_to_json()
 
-                    p.inventory_level = p.inventory_level - quantity
+                    p.inventory_level = p.inventory_level - new_purchase.quantity
                     if p.inventory_level <= min_inventory:
                         restock_item(p.product_id)
                     break
+        
+        # wait a certain amount of time
         time.sleep(random.randint(min_sale_freq, max_sale_freq))
 
 
@@ -123,7 +134,7 @@ def restock_item(product_id):
         if p.product_id == product_id:
             new_level = p.inventory_level + restock_amount
             new_inventory = Inventory(
-                str(datetime.utcnow()),
+                str(datetime.now()),
                 p.product_id,
                 p.inventory_level,
                 restock_amount,
@@ -191,6 +202,7 @@ def random_add_supplements(product_id):
 
 if __name__ == "__main__":
 
+    os.makedirs("data/customer", exist_ok=True)
     os.makedirs("data/product", exist_ok=True)
     os.makedirs("data/purchase", exist_ok=True)
     os.makedirs("data/inventory", exist_ok=True)
