@@ -22,12 +22,9 @@ config.read("data_generator/configuration.ini")
 min_sale_freq = int(config["SALES"]["min_sale_freq"])
 max_sale_freq = int(config["SALES"]["max_sale_freq"])
 number_of_sales = int(config["SALES"]["number_of_sales"])
-transaction_quantity_one_item_freq = int(config["SALES"]["transaction_quantity_one_item_freq"])
-item_quantity_one_freq = int(config["SALES"]["item_quantity_one_freq"])
-member_freq = int(config["SALES"]["member_freq"])
+pct_not_members = float(config["SALES"]["pct_not_members"])
 club_member_discount = float(config["SALES"]["club_member_discount"])
-add_supp_freq_group1 = int(config["SALES"]["add_supp_freq_group1"])
-add_supp_freq_group2 = int(config["SALES"]["add_supp_freq_group2"])
+pct_no_supplements = float(config["SALES"]["pct_no_supplements"])
 supplements_cost = float(config["SALES"]["supplements_cost"])
 min_inventory = int(config["INVENTORY"]["min_inventory"])
 restock_amount = int(config["INVENTORY"]["restock_amount"])
@@ -63,10 +60,8 @@ def create_product_list():
             p[14],
         )
         products.append(new_product)
-
         new_product.write_to_json()
         print(new_product)
-
         propensity_to_buy_range.append(int(p[14]))
     propensity_to_buy_range.sort()
 
@@ -97,7 +92,7 @@ def generate_sales():
         previous_rnd_propensity_to_buy = -1
 
         # generate a number of transactions per sale
-        for _ in range(0, random_transaction_item_quantity()):
+        for _ in range(0, random.randint(1, 3)):
             
             # reduces but not eliminates risk of duplicate products in same transaction
             if rnd_propensity_to_buy == previous_rnd_propensity_to_buy:
@@ -120,9 +115,9 @@ def generate_sales():
                         customer_id=customer.customer_id,
                         product_id=p.product_id,
                         price=p.price,
-                        quantity=random_quantity(),
-                        is_member=random_club_member(),
-                        add_supplements=random_add_supplements(p.product_id),
+                        quantity=random.randint(1, 3),
+                        is_member=random.random() > pct_not_members,
+                        add_supplements=random.random() > pct_no_supplements,
                     )
 
                     print(new_sale)
@@ -167,46 +162,6 @@ def to_bool(value):
 # Credit: https://www.geeksforgeeks.org/python-find-closest-number-to-k-in-given-list/
 def closest_product_match(lst, k):
     return lst[min(range(len(lst)), key=lambda i: abs(lst[i] - k))]
-
-
-# individual item purchase quantity (usually 1, max 3)
-def random_quantity():
-    rnd = random.randint(1, 30)
-    if rnd == 30:
-        return 3
-    if rnd <= item_quantity_one_freq:
-        return 1
-    return 2
-
-
-# transaction items quantity (usually 1, max 3)
-def random_transaction_item_quantity():
-    rnd = random.randint(1, 20)
-    if rnd >= 19:
-        return 3
-    if rnd <= transaction_quantity_one_item_freq:
-        return 1
-    return 2
-
-
-# smoothie club membership? (usually False)
-def random_club_member():
-    rnd = random.randint(1, 10)
-    if rnd <= member_freq:
-        return True
-    return False
-
-
-# add supplements? (more frequently purchased for SF and SC products)
-def random_add_supplements(product_id):
-    rnd = random.randint(1, 10)
-    if str(product_id).startswith("SF") or str(product_id).startswith("SC"):
-        if rnd <= add_supp_freq_group1:
-            return True
-        return False
-    if rnd <= add_supp_freq_group2:
-        return True
-    return False
 
 
 if __name__ == "__main__":
