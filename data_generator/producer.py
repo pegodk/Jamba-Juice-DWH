@@ -31,6 +31,8 @@ add_supp_freq_group2 = int(config["SALES"]["add_supp_freq_group2"])
 supplements_cost = float(config["SALES"]["supplements_cost"])
 min_inventory = int(config["INVENTORY"]["min_inventory"])
 restock_amount = int(config["INVENTORY"]["restock_amount"])
+keep_existing_price = float(config["PRODUCT"]["keep_existing_price"])
+maximum_pct_price_increase = float(config["PRODUCT"]["maximum_pct_price_increase"])
 
 # *** VARIABLES ***
 customers = []
@@ -104,9 +106,16 @@ def generate_sales():
                 )
             previous_rnd_propensity_to_buy = rnd_propensity_to_buy
             
-            for p in products:
+            for p_idx, p in enumerate(products):
                 if p.propensity_to_buy == rnd_propensity_to_buy:
+                    
+                    # check if price should be increased
+                    if random.uniform(0, 1) > keep_existing_price:
+                        p.price *= 1 + random.uniform(0, maximum_pct_price_increase)
+                        p.write_to_json()
+                        print(p)
 
+                    # generate new sale
                     new_purchase = Purchase(
                         customer_id=customer.customer_id,
                         product_id=p.product_id,
