@@ -107,6 +107,7 @@ def generate_sales():
                     if random.uniform(0, 1) > keep_existing_price:
                         p.price *= 1 + random.uniform(0, maximum_pct_price_increase)
                         p.write_to_json()
+                        products[p_idx] = p
                         print(p)
 
                     # generate new sale
@@ -119,8 +120,9 @@ def generate_sales():
                         add_supplements=random.random() > pct_no_supplements,
                     )
 
-                    print(new_sale)
+                    # write to json file and print to console output
                     new_sale.write_to_json()
+                    print(new_sale)
 
                     p.inventory_level = p.inventory_level - new_sale.quantity
                     if p.inventory_level <= min_inventory:
