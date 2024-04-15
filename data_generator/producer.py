@@ -5,7 +5,6 @@
 
 import os
 import configparser
-import json
 import random
 import time
 from csv import reader
