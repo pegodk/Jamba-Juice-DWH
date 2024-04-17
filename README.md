@@ -1,10 +1,10 @@
 # Welcome to the Jamba Juice Bar®
 
+This demo is about building a **Streaming Data Warehouse** for a fictitious company, Jamba Juice, based on [Spark Structured Streaming](https://github.com/apache/spark) and [Delta](https://github.com/delta-io/delta).
+
 **Motivation:** You run a smoothie shop, but really want to keep track of your sales - in real-time!
 
-This project is therefore about building a **Streaming Data Warehouse** based on [Spark](https://github.com/apache/spark) and [Delta](https://github.com/delta-io/delta).
-
-![alt text](images/juice_bar.png "Jamba Juice Bar")
+![alt text](images/juice_bar.png "Jamba Juice")
 
 ## Inspiration for this project
 
