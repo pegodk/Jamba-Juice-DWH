@@ -1,25 +1,7 @@
-def reorder_columns_in_dataframe(df, columns_to_front, columns_to_back=[], columns_to_delete=[]):
-    
-    # Get original order of columns
-    original = df.columns
-    
-    # Filter to present columns
-    columns_to_front = [c for c in columns_to_front if c in original]
-    columns_to_back = [c for c in columns_to_back if c in original and c not in columns_to_delete]
-    
-    # Keep the rest of the columns and sort it for consistency
-    columns_other = list(set(original) - set(columns_to_front)- set(columns_to_back) - set(columns_to_delete))
-    columns_other.sort()
-    
-    # Apply the order
-    df = df.select(*columns_to_front, *columns_other, *columns_to_back)
-    return df
-
-
 def generate_dim_table_references(source, target, timestamp_key, dim_table_refs, delta_load_column, print_output=False):
     
-    query_first = "SELECT src.*"
-    query_last = f"\nFROM {source} src"
+    query_first = "SELECT s.*"
+    query_last = f"\nFROM {source} s"
 
     for ref in dim_table_refs:
         
@@ -27,12 +9,12 @@ def generate_dim_table_references(source, target, timestamp_key, dim_table_refs,
         query_first += f""", {ref["table_name"]}.{ref["surrogate_key"]} """
 
         # Construct last part of query: Joins
-        query_last += f"""\nLEFT JOIN {ref["table_name"]} ON {ref["table_name"]}.{ref["merge_key"]} = src.{ref["merge_key"]}
-        AND src.{timestamp_key} BETWEEN {ref["table_name"]}.meta_valid_from AND {ref["table_name"]}.meta_valid_to"""
+        query_last += f"""\nLEFT JOIN {ref["table_name"]} ON {ref["table_name"]}.{ref["merge_key"]} = s.{ref["merge_key"]}
+        AND s.{timestamp_key} BETWEEN {ref["table_name"]}.meta_valid_from AND {ref["table_name"]}.meta_valid_to"""
 
     # Add delta load logic if the target table already exists
     if delta_load_column:
-        query_last += f"\n WHERE src.{delta_load_column} > (SELECT COALESCE(MAX({delta_load_column}), '1970-01-01') FROM {target})"
+        query_last += f"\n WHERE s.{delta_load_column} > (SELECT COALESCE(MAX({delta_load_column}), '1970-01-01') FROM {target})"
     
     # Print output
     if print_output:
