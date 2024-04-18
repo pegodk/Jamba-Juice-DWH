@@ -77,9 +77,7 @@ def generate_sales():
         
         # choose existing customer or generate new
         customer = pick_customer(customers)
-        customer.write_to_json()
-        print(customer)
-
+        
         # append customer to list of customers or overwrite previous info if neccessary
         if customer.customer_id > len(customers):
             customers.append(customer)

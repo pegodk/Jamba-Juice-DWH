@@ -13,20 +13,31 @@ persistant_address = float(config["CUSTOMER"]["persistant_address"])
 persistant_credit_card = float(config["CUSTOMER"]["persistant_credit_card"])
 
 def pick_customer(ls_customers):
-        
+
+    # Initialize save flag to false
+    save_new_entry_flag = False
+
     # choose existing customer or generate new
     if len(ls_customers) == 0 or (random.uniform(0, 1) > returning_customers):
         customer = Customer(customer_id=len(ls_customers) + 1)
+        save_new_entry_flag = True
     else:
         cust_idx = random.randint(0, len(ls_customers) - 1)
         customer = ls_customers[cust_idx]
 
         if random.uniform(0, 1) > persistant_address:
             customer.address = fake.address()
+            save_new_entry_flag = True
 
         if random.uniform(0, 1) > persistant_credit_card:
             customer.credit_card_number = fake.credit_card_number()
             customer.credit_card_expire = fake.credit_card_expire(start="now", end="+10y", date_format="%m/%y")
+            save_new_entry_flag = True
+
+    # Save customer to file only if new customer or changes to existing
+    if save_new_entry_flag:
+        customer.write_to_json()
+        print(customer)
 
     return customer
 
