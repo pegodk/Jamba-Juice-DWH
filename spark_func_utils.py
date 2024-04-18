@@ -1,7 +1,7 @@
-def generate_dim_table_references(source, target, timestamp_key, dim_table_refs, print_output=False):
+def generate_dim_table_references(source_table, timestamp_key, dim_table_refs, print_output=False):
     
     query_first = "SELECT s.*"
-    query_last = f"\nFROM {source} s"
+    query_last = f"\nFROM {source_table} s"
 
     for ref in dim_table_refs:
         
